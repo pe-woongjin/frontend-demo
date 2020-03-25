@@ -42,12 +42,6 @@ export default {
   },
   methods: {
     click() {
-      // axios.get('https://reqres.in/api/users').then(res => { 
-      //   console.log(res.data)
-      //   this.resultData = res.data;
-      //   this.totalData = this.resultData.total;
-      //   this.dataList = this.resultData.data;
-      // })
       axios.get('/api/users').then(res => { 
         console.log(res.data)
         this.resultData = res.data;
@@ -63,7 +57,7 @@ export default {
     }
   },
   created() {
-    
+    console.log(process.env)
   }
 }
 </script>
