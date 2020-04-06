@@ -5,9 +5,12 @@ import store from './store'
 import BootstrapVue from "bootstrap-vue";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
+import moment from "moment";
+import VueMomentJS from "vue-momentjs";
 
 Vue.use(BootstrapVue);
 Vue.config.productionTip = false
+Vue.use(VueMomentJS, moment);
 
 new Vue({
   router,

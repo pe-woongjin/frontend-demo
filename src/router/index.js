@@ -44,7 +44,8 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../components/demo/DemoCreate.vue")
-  }
+  },
+  { path: '*', redirect: '/' }
 ]
 
 const router = new VueRouter({

@@ -5,25 +5,25 @@
       <button type="button" class="btn btn-secondary" @click="clear">Clear</button>
     </div>
     <br>
-    <div v-if="totalData === 0">
+    <div v-if="dataList.size === 0">
         <noDataPage></noDataPage>
     </div>
     <div v-else>
       <table class="table">
         <thead>
           <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Email</th>
-            <th scope="col">First Name</th>
-            <th scope="col">Last Name</th>
+            <th scope="col">name</th>
+            <th scope="col">category</th>
+            <th scope="col">price</th>
+            <th scope="col">regdtm</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in dataList" :key="item.id" @click="sbstbtn(item)">
-            <th scope="row">{{item.id}}</th>
-            <td>{{item.email}}</td>
-            <td>{{item.first_name}}</td>
-            <td>{{item.last_name}}</td>
+            <th scope="row">{{item.name}}</th>
+            <td>{{item.category}}</td>
+            <td>{{item.price}}</td>
+            <td>{{dateConvert(item.regdtm)}}</td>
           </tr>
         </tbody>
       </table>
@@ -44,18 +44,15 @@ export default {
   components: { noDataPage },
   data: function() {
     return {
-      resultData: {},
-      totalData: 0,
       dataList: []
     }
   },
   methods: {
     search() {
       // api 호출
-      axios.getApi('/api/users').then(res => {
-        this.resultData = res.data;
-        this.totalData = this.resultData.total;
-        this.dataList = this.resultData.data;
+      axios.getApi('/v1/products').then(res => {
+        this.dataList = res.data;
+        console.log(">>", this.dataList);
       });
     },
     clear() {
@@ -71,11 +68,15 @@ export default {
     sbstbtn(item) {
       console.log("데이터 확인 : ", item);
       this.$router.push({ name: "DemoSbst", query: {id: item.id } });
+    },
+    dateConvert(date) {
+      return this.$moment(date).format('YYYY-MM-DD hh:mm');
     }
   },
   created() {
     console.log(process.env)
     this.clear();
+    this.search();
   }
 }
 </script>
