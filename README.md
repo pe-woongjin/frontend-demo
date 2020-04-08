@@ -23,9 +23,17 @@ $ git --version
 ~~~
 
 ### 3) IDE tool 설치
-- IDE tool : Visual Studio Code
-- 마켓플레이스 : Vetur, Korean Language Pack for Visual Studio Code...
-  (필요에 따라 추가 등록)
+- tool : Visual Studio Code
+- 마켓플레이스 (개인 필요에 따라 추가 등록) :
+~~~
+Vetur 
+Korean Language Pack for Visual Studio Code
+git
+ESLint
+Vue VSCode Snippets
+Prettier
+~~~
+  
 
 ## 2. GIT repository Pull
 ### 1) 프로젝트 폴더 위치
@@ -47,7 +55,12 @@ $ npm install
 ~~~
 ![screen](manual/images/npm_install.png)
 
-### 2) 실행
+### 2) cache 이상이 있는 경우 실행 (clear)
+~~~
+$ npm cache verify
+~~~ 
+
+### 3) 실행
 ~~~
 $ npm run serve
 ~~~
