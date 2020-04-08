@@ -12,7 +12,12 @@ $ node -v
 $ npm -v   
 ~~~
 
-### 2) GIT 설치
+### 2) vue cli 설치
+~~~
+$ sudo npm install -g @vue/cli
+~~~
+
+### 3) GIT 설치
 - git 설치
 ~~~
 $ brew install git
