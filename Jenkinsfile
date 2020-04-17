@@ -5,14 +5,11 @@ node {
   stage ('directory copy') {
     dir ("/home/$USER/${JOB_NAME}") {
       sh '''
-      echo dir test
+      echo dir test1
       '''
     }
     sh '''
-    if[!-d /home/$USER/"${JOB_NAME}"];then
-      mkdir -p /home/$USER/"${JOB_NAME}"
-    fi
-    cp -r /var/lib/jenkins/workspace/"${JOB_NAME}" /home/$USER/"${JOB_NAME}"
+    echo dir test2
     '''
   }
 }
