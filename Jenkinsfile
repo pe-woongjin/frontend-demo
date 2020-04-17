@@ -3,11 +3,11 @@ node {
     git(url: 'https://github.com/pe-woongjin/frontend-demo.git', branch: "${branch}", changelog: true)
   }
   stage ('directory copy') {
-    dir ("/home/$USER/${JOB_NAME}") {
-      sh '''
-      echo dir test1
-      '''
-    }
+    sh '''
+    mkdir -p /home/$USER/"${JOB_NAME}
+    cp -r /var/lib/jenkins/workspace/"${JOB_NAME}" /home/$USER/"${JOB_NAME}"
+    echo dir test1
+    '''
     sh '''
     echo dir test2
     '''
