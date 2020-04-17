@@ -4,11 +4,10 @@ node {
   }
   stage ('directory copy') {
     sh '''
-    echo "${JOB_NAME}"
-    echo $USER
+    cp -r /var/lib/jenkins/workspace/"${JOB_NAME}" /home/$USER/"${JOB_NAME}"
     '''
   }
 }
 parameters {
-  string(name: 'branch', defaultValue: 'develop', description: '디플로이할 대상 브랜치를 입력하세요.')
+  choice(name: 'branch', choices: ['develop', 'release', 'master'], description: '브랜치를 선택하세요.')
 }
