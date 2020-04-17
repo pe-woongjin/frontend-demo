@@ -3,6 +3,11 @@ node {
     git(url: 'https://github.com/pe-woongjin/frontend-demo.git', branch: "${branch}", changelog: true)
   }
   stage ('directory copy') {
+    dir (/home/$USER/"${JOB_NAME}") {
+      sh '''
+      echo dir test
+      '''
+    }
     sh '''
     if[!-d /home/$USER/"${JOB_NAME}"];then
       mkdir -p /home/$USER/"${JOB_NAME}"
