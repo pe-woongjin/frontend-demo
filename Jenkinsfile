@@ -4,12 +4,8 @@ node {
   }
   stage ('directory copy') {
     sh '''
-    mkdir -p /home/$USER/"${JOB_NAME}"
-    cp -r /var/lib/jenkins/workspace/"${JOB_NAME}" /home/$USER/"${JOB_NAME}"
-    echo dir test1
-    '''
-    sh '''
-    echo dir test2
+    cp -r /var/lib/jenkins/workspace/"${JOB_NAME}" ~/"${JOB_NAME}"
+    echo dir test
     '''
   }
 }
