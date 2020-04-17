@@ -4,8 +4,8 @@ node {
   }
   stage ('directory copy') {
     sh '''
-    echo {JOB_NAME}
-    echo ${BUILD_USER}
+    echo "${JOB_NAME}"
+    echo "${BUILD_USER}"
     '''
   }
 }
