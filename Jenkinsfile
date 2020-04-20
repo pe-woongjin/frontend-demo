@@ -29,9 +29,11 @@ node {
     npm install
     echo npm install success
     '''
-    sh "cd /var/lib/jenkins/workspace/build/${JOB_NAME}"
-    sh "pwd"
-    sh "npm run ${mode}"
+    dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}") {
+      sh "pwd"
+      sh "npm run ${mode}"
+    }
+    
   }
   stage ('S3 Upload') {
     sh "echo s3 Upload start"
