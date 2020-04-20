@@ -39,7 +39,7 @@ node {
   stage ('S3 Upload') {
     sh "echo s3 Upload start"
     dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}") {
-      s3Upload(file:"dist/", bucket:'ksu-s3-mgmt', path:"arn:aws:s3:::ksu-s3-mgmt/frontend/")
+      s3Upload(file:"dist/", bucket:'ksu-s3-mgmt', path:"frontend/")
     }
     sh "echo s3 Upload end"
     // s3Upload(file:"${it}", bucket:'rpm-repo', path:"${bucket_path}")
