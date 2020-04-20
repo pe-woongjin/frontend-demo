@@ -5,14 +5,15 @@ node {
   }
   stage ('directory copy') {
     if ("${branch}" == 'develop') {
-      sh 'echo dev'
+      mode = 'build-dev'
     } else if ("${branch}" == 'release') {
-      sh 'echo rel'
+      mode = 'build-rel'
     } else {
-      sh 'echo master'
+      mode = 'build-prod'
     }
+    sh 'echo "mode = ${mode}"'
+    
     sh '''
-    rm 
     mkdir -p ~/workspace/build
     cp -r /var/lib/jenkins/workspace/"${JOB_NAME}" /var/lib/jenkins/workspace/build/"${JOB_NAME}"
     cd ~/workspace/build/"${JOB_NAME}"
