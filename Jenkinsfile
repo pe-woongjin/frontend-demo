@@ -7,7 +7,7 @@ node {
     git(url: 'https://github.com/pe-woongjin/frontend-demo.git', branch: "${branch}", changelog: true)
   }
   stage ('Npm Build') {
-    // env parameter
+    // env parameter setting
     if ("${branch}" == 'develop') {
       mode = 'build-dev'
     } else if ("${branch}" == 'release') {
@@ -22,7 +22,7 @@ node {
     // directory check
     sh '''
     mkdir -p /var/lib/jenkins/workspace/build
-    rm -rf /var/lib/jenkins/workspace/build/*
+    rm -rf /var/lib/jenkins/workspace/build/"${JOB_NAME}"/*
     cp -r /var/lib/jenkins/workspace/"${JOB_NAME}" /var/lib/jenkins/workspace/build/"${JOB_NAME}"
     cd /var/lib/jenkins/workspace/build/"${JOB_NAME}"
     npm install
