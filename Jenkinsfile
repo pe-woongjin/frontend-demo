@@ -4,7 +4,6 @@ node {
     git(url: 'https://github.com/pe-woongjin/frontend-demo.git', branch: "${branch}", changelog: true)
   }
   stage ('directory copy') {
-    # 
     if ("${branch}" == 'develop') {
       sh 'echo dev'
     } else if ("${branch}" == 'release') {
