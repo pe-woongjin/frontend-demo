@@ -4,6 +4,7 @@ node {
   }
   stage ('directory copy') {
     sh '''
+    mkdir -p /home/jenkins
     cp -r /var/lib/jenkins/workspace/"${JOB_NAME}" ~/"${JOB_NAME}"
     echo dir test
     '''
