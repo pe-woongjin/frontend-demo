@@ -21,6 +21,7 @@ node {
     
     // directory check
     sh '''
+    echo mode1 = ${mode}
     mkdir -p /var/lib/jenkins/workspace/build
     rm -rf /var/lib/jenkins/workspace/build/"${JOB_NAME}"/*
     cp -rf /var/lib/jenkins/workspace/"${JOB_NAME}" /var/lib/jenkins/workspace/build
