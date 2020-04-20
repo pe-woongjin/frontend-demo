@@ -1,18 +1,23 @@
 def mode = ""
 node {
   stage('Git clone') {
+    sh "rm -rf /var/lib/jenkins/workspace/${JOB_NAME}"
     git(url: 'https://github.com/pe-woongjin/frontend-demo.git', branch: "${branch}", changelog: true)
   }
-  stage ('npm build') {
+  stage ('Npm Build') {
+    // env parameter
     if ("${branch}" == 'develop') {
       mode = 'build-dev'
     } else if ("${branch}" == 'release') {
       mode = 'build-rel'
-    } else {
+    } else if ("${branch}" == 'master') {
       mode = 'build-prod'
+    } else {
+      error "env parameter error!!!!"
     }
     sh "echo mode = ${mode}"
     
+    // directory check
     sh '''
     mkdir -p /var/lib/jenkins/workspace/build
     rm -rf /var/lib/jenkins/workspace/build/*
@@ -23,7 +28,10 @@ node {
     echo npm build success
     '''
   }
+  stage ('S3 Upload') {
+    sh "echo s3 Upload start"
+  }
 }
 parameters {
-  choice(name: 'branch', choices: ['develop', 'release', 'master'], description: '브랜치를 선택하세요.')
+  string(name: 'branch', defaultValue: 'develop', description: '디플로이할 대상 브랜치를 입력하세요.')
 }
