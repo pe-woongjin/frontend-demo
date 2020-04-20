@@ -17,7 +17,7 @@ node {
     } else {
       error "env parameter error!!!!"
     }
-    sh "echo mode = ${mode}"
+    // sh "echo mode = ${mode}"
     
     // directory check
     sh '''
