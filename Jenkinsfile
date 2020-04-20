@@ -11,7 +11,7 @@ node {
     } else {
       mode = 'build-prod'
     }
-    sh 'echo mode = "${mode}"'
+    sh "echo mode = ${mode}"
     
     sh '''
     mkdir -p /var/lib/jenkins/workspace/build
