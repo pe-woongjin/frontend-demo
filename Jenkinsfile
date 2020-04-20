@@ -5,7 +5,7 @@ node {
   stage ('directory copy') {
     sh '''
     mkdir -p ~/workspace/build
-    cp -r /var/lib/jenkins/workspace/"${JOB_NAME}" ~/build/"${JOB_NAME}"
+    cp -r /var/lib/jenkins/workspace/"${JOB_NAME}" ~/workspace/build/"${JOB_NAME}"
     cd ~/build/"${JOB_NAME}"
     npm install
     npm run build-dev
