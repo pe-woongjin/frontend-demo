@@ -1,7 +1,7 @@
 def mode = ""
 node {
   stage('Git clone') {
-    // sh "rm -rf /var/lib/jenkins/workspace/${JOB_NAME}"
+    sh "rm -rf /var/lib/jenkins/workspace/${JOB_NAME}"
     git(url: 'https://github.com/pe-woongjin/frontend-demo.git', branch: "${branch}", changelog: true)
   }
   stage ('Npm Build') {
