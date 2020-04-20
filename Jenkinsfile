@@ -17,11 +17,11 @@ node {
     } else {
       error "env parameter error!!!!"
     }
-    // sh "echo mode = ${mode}"
+    sh "echo modeVal = ${mode}"
     
     // directory check
     sh '''
-    echo mode1 = ${mode}
+    echo "mode1 = ${mode}"
 
     echo test1 = ${mode}
     echo test2 = "${mode}"
