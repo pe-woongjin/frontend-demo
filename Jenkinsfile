@@ -29,6 +29,7 @@ node {
     npm install
     echo npm install success
     '''
+    sh "pwd"
     sh "npm run ${mode}"
   }
   stage ('S3 Upload') {
