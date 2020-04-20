@@ -1,5 +1,5 @@
-def mode = ""
 node {
+  def mode = ''
   stage('Git clone') {
     sh '''
     rm -rf /var/lib/jenkins/workspace/"${JOB_NAME}"/*
