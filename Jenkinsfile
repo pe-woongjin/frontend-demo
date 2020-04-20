@@ -2,7 +2,6 @@ def mode = ""
 node {
   stage('Git clone') {
     sh '''
-    echo "${JOB_NAME}"
     rm -rf /var/lib/jenkins/workspace/"${JOB_NAME}"/*
     '''
     git(url: 'https://github.com/pe-woongjin/frontend-demo.git', branch: "${branch}", changelog: true)
