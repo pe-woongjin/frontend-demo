@@ -29,6 +29,7 @@ node {
     npm install
     echo npm install success
     '''
+    sh "cd /var/lib/jenkins/workspace/build/${JOB_NAME}"
     sh "pwd"
     sh "npm run ${mode}"
   }
