@@ -26,7 +26,6 @@ node {
     cp -rf /var/lib/jenkins/workspace/"${JOB_NAME}" /var/lib/jenkins/workspace/build
     cd /var/lib/jenkins/workspace/build/"${JOB_NAME}"
     npm install
-    echo test1 -> ${mode}
     echo test2 -> "${mode}"
     npm run ${mode}
     echo npm build success
