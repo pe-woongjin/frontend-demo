@@ -3,7 +3,7 @@ node {
   stage('Git clone') {
     git(url: 'https://github.com/pe-woongjin/frontend-demo.git', branch: "${branch}", changelog: true)
   }
-  stage ('directory copy') {
+  stage ('npm build') {
     if ("${branch}" == 'develop') {
       mode = 'build-dev'
     } else if ("${branch}" == 'release') {
@@ -20,7 +20,7 @@ node {
     cd /var/lib/jenkins/workspace/build/"${JOB_NAME}"
     npm install
     npm run ${mode}
-    echo dir test
+    echo npm build success
     '''
   }
 }
