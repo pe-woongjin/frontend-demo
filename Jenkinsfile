@@ -21,7 +21,7 @@ node {
     
     // directory check
     sh '''
-    echo "mode1 = ${mode}"
+    echo mode1 = '${mode}'
 
     echo test1 = ${mode}
     echo test2 = "${mode}"
