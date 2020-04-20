@@ -6,7 +6,7 @@ node {
     '''
     git(url: 'https://github.com/pe-woongjin/frontend-demo.git', branch: "${branch}", changelog: true)
   }
-  stage ('Npm Build') {
+  stage ('npm build') {
     // env parameter setting
     if ("${branch}" == 'develop') {
       mode = 'build-dev'
@@ -29,6 +29,7 @@ node {
     npm install
     echo npm install success
     '''
+    // npm build
     dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}") {
       sh "pwd"
       sh "npm run ${mode}"
@@ -37,6 +38,11 @@ node {
   }
   stage ('S3 Upload') {
     sh "echo s3 Upload start"
+    dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}") {
+      s3Upload(file:"dist/", bucket:'ksu-s3-mgmt', path:"arn:aws:s3:::ksu-s3-mgmt/frontend/")
+    }
+    sh "echo s3 Upload end"
+    // s3Upload(file:"${it}", bucket:'rpm-repo', path:"${bucket_path}")
   }
 }
 parameters {
