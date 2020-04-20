@@ -11,12 +11,13 @@ node {
     } else {
       mode = 'build-prod'
     }
-    sh 'echo "mode = ${mode}"'
+    sh 'echo mode = "${mode}"'
     
     sh '''
-    mkdir -p ~/workspace/build
+    mkdir -p /var/lib/jenkins/workspace/build
+    rm -rf /var/lib/jenkins/workspace/build/*
     cp -r /var/lib/jenkins/workspace/"${JOB_NAME}" /var/lib/jenkins/workspace/build/"${JOB_NAME}"
-    cd ~/workspace/build/"${JOB_NAME}"
+    cd /var/lib/jenkins/workspace/build/"${JOB_NAME}"
     npm install
     npm run build-dev
     echo dir test
