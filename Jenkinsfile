@@ -19,7 +19,7 @@ node {
     cp -r /var/lib/jenkins/workspace/"${JOB_NAME}" /var/lib/jenkins/workspace/build/"${JOB_NAME}"
     cd /var/lib/jenkins/workspace/build/"${JOB_NAME}"
     npm install
-    npm run build-dev
+    npm run ${mode}
     echo dir test
     '''
   }
