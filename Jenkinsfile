@@ -27,6 +27,7 @@ node {
     echo test2 = "${mode}"
     echo npm build success
     '''
+    sh "echo modeVal2 = ${mode}"
   }
   stage ('S3 Upload') {
     sh "echo s3 Upload start"
