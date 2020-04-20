@@ -1,5 +1,5 @@
-def mode = ''
 node {
+  def mode = ''
   stage('Git clone') {
     sh '''
     rm -rf /var/lib/jenkins/workspace/"${JOB_NAME}"/*
@@ -17,17 +17,19 @@ node {
     } else {
       error "env parameter error!!!!"
     }
-    sh "echo modeVal = ${mode}"
+    // sh "echo mode = ${mode}"
     
     // directory check
     sh '''
-    echo mode1 = '${mode}'
-
-    echo test1 = ${mode}
-    echo test2 = "${mode}"
-    echo npm build success
+    echo mode1 = ${mode}
+    mkdir -p /var/lib/jenkins/workspace/build
+    rm -rf /var/lib/jenkins/workspace/build/"${JOB_NAME}"/*
+    cp -rf /var/lib/jenkins/workspace/"${JOB_NAME}" /var/lib/jenkins/workspace/build
+    cd /var/lib/jenkins/workspace/build/"${JOB_NAME}"
+    npm install
+    echo npm install success
     '''
-    sh "echo modeVal2 = ${mode}"
+    sh "npm run ${mode}"
   }
   stage ('S3 Upload') {
     sh "echo s3 Upload start"
