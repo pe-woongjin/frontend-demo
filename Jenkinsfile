@@ -29,7 +29,6 @@ node {
     '''
     // npm build
     dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}") {
-      sh "pwd"
       sh "npm run ${mode}"
     }
     
