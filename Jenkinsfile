@@ -40,7 +40,7 @@ node {
     sh "echo s3 Upload start"
     dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}") {
       withAWS(region:'ap-northeast-2') {
-        s3Upload(file:'dist', bucket:'ksu-s3-mgmt', path:'frontend/${BUILD_NUMBER}')
+        s3Upload(file:'dist', bucket:'ksu-s3-mgmt', path:'frontend/"${BUILD_NUMBER}"')
       }      
     }
     sh "echo s3 Upload end"
