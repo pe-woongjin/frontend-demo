@@ -6,6 +6,7 @@ node {
       sh "ls -al"
       // withAWS(externalId: "${EXTERNAL_ID}", region: "${REGION}", role: "${ROLE}", roleAccount: "${AWS_ACCOUNT_ID}")
       withAWS(region:'ap-northeast-2') {
+        sh "echo test"
         s3Upload(file:'index.html', bucket:'ksu-s3-mgmt', path:'path/to/frontend/')
       }      
     }
