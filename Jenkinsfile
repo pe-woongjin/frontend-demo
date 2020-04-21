@@ -1,8 +1,7 @@
 node {
   def mode = ''
-  def build = manager.build.number
   stage ('S3 Upload') {
-    sh "echo s3 Upload start ${build}"
+    sh "echo s3 Upload start ${BUILD_NUMBER}"
 
     sh "echo s3 Upload end"
   }
