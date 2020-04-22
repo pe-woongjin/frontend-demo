@@ -36,7 +36,7 @@ node {
   stage ('S3 Upload') {
     dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}") {
       withAWS(region:'ap-northeast-2') {
-        s3Upload(file:'dist', bucket:'ksu-s3-mgmt', path:"frontend/${JOB_NAME}/${BUILD_NUMBER}")
+        s3Upload(file:'dist', bucket:'opsflex-cicd-mgmt', path:"frontend/${JOB_NAME}/${BUILD_NUMBER}")
       }      
     }
   }
