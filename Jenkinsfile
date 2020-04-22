@@ -34,9 +34,11 @@ node {
     
   }
   stage ('S3 Upload') {
-    dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}") {
+    dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}/dist") {
+      sh "jar cvf frontend.war *"
+      sh "ls"
       withAWS(region:'ap-northeast-2') {
-        s3Upload(file:'dist', bucket:'opsflex-cicd-mgmt', path:"frontend/${JOB_NAME}/${BUILD_NUMBER}")
+        s3Upload(file:'frontend.war', bucket:'opsflex-cicd-mgmt', path:"frontend/${JOB_NAME}/${BUILD_NUMBER}/frontend.war")
       }      
     }
   }
