@@ -1,9 +1,9 @@
 #! /bin/sh
-if [ -d "/home/ubuntu/dist" ]
+if [ -d "/home/ec2-user/dist" ]
 then
    echo exist directory
-   rm -rf /home/ubuntu/dist/*
+   rm -rf /home/ec2-user/dist/*
 else
    echo not exist directory
-   mkdir -p /home/ubuntu/dist
+   mkdir -p /home/ec2-user/dist
 fi
