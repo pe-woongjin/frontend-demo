@@ -17,3 +17,8 @@ hooks:
     - location: scripts/applicationStart.sh
       timeout: 300
       runas: root  
+permissions:
+    - object: /
+      pattern: "**"
+      owner: ubuntu
+      group: ubuntu
