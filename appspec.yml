@@ -4,12 +4,6 @@ files:
   - source: /
     destination: /home/ubuntu/dist
 
-permissions:
-  - object: /
-    pattern: "**"
-    owner: jenkins
-    group: jenkins
-
 hooks:
   BeforeInstall:
     - location: scripts/beforeInstall.sh
