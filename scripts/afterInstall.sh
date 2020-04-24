@@ -1,5 +1,6 @@
 #! /bin/sh
-SHELL_PATH=`pwd -P`
-echo $SHELL_PATH
+#SHELL_PATH=`pwd -P`
+#echo $SHELL_PATH
 
-cp -rf  $SHELL_PATH/* /home/ubuntu/dist
+#cp -rf  $SHELL_PATH/* /home/ubuntu/dist
+echo test
