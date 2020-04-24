@@ -31,15 +31,31 @@ node {
     dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}") {
       sh "npm run ${mode}"
     }
+    // codedeploy setting
+    sh "cp -rf /var/lib/jenkins/workspace/build/${JOB_NAME}/scripts /var/lib/jenkins/workspace/build/${JOB_NAME}/dist"
+    sh "cp -rf /var/lib/jenkins/workspace/build/${JOB_NAME}/appspec.yml /var/lib/jenkins/workspace/build/${JOB_NAME}/dist" 
     
   }
   stage ('S3 Upload') {
     dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}/dist") {
-      sh "jar cvf frontend.war *"
+      sh "jar cvf frontend.zip *"
       sh "ls"
       withAWS(region:'ap-northeast-2') {
-        s3Upload(file:'frontend.war', bucket:'opsflex-cicd-mgmt', path:"frontend/${JOB_NAME}/${BUILD_NUMBER}/frontend.war")
+        s3Upload(file:'frontend.zip', bucket:'demo-apne2-cicd-mgmt', path:"frontend/${JOB_NAME}/${BUILD_NUMBER}/frontend.zip")
       }      
+    }
+  }
+  stage ('deploy') {
+    dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}/dist") {
+      sh "aws --version"
+      sh '''
+      aws deploy create-deployment \
+      --application-name "demo-apne2-ui-codedeploy" \
+      --s3-location bucket="demo-apne2-cicd-mgmt",key=frontend/${JOB_NAME}/${BUILD_NUMBER}/frontend.zip,bundleType=zip \
+      --deployment-group-name "demo-ui-group-a" \
+      --description "create frontend" \
+      --region ap-northeast-2
+      '''
     }
   }
 }
