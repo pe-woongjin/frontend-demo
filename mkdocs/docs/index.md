@@ -12,19 +12,19 @@
 
 
 ## 3. MVVM 패턴
-![Screenshot](../img/main/main_01.png)
+![Screenshot](img/main/main_01.png)
 
 ## 4. 가상돔
-![Screenshot](../img/main/main_02.png)
+![Screenshot](img/main/main_02.png)
 
 ## 5. 컴포넌트
-![Screenshot](../img/main/main_03.png)
+![Screenshot](img/main/main_03.png)
 
 ## 6. 생명주기
-![Screenshot](../img/main/main_04.png)
+![Screenshot](img/main/main_04.png)
 
 ## 7. Vue 인스턴스
-![Screenshot](../img/main/main_05.png)
+![Screenshot](img/main/main_05.png)
 
 ## 8. mkdocs 생성 및 실행
 > - mkdocs 생성
