@@ -1,5 +1,32 @@
-def S3_BUCKET_NAME      = "opsflex-cicd-mgmt"
-def S3_PATH             = "frontend"
+import groovy.json.JsonSlurper
+
+def S3_BUCKET_NAME        = "opsflex-cicd-mgmt"
+def S3_PATH               = "frontend"
+
+def TARGET_DOMAIN_NAME    = "dev.ui.mingming.shop"
+def TARGET_GROUP_PREFIX   = "demo-apne2-dev-ui"
+def TARGET_RULE_ARN       = "arn:aws:elasticloadbalancing:ap-northeast-2:144149479695:listener-rule/app/comp-apne2-prod-mgmt-alb/d76ec25af38db29c/d15a5636f3b71341/1e1c03bd4d65fa61"
+
+@NonCPS
+def toJson(String text) {
+    def parser = new JsonSlurper()
+    return parser.parseText( text )
+}
+
+def VUE_MODE = ""
+
+
+def initEnvData(String text) {
+    if (text == 'develop') {
+      env.VUE_MODE = 'build-dev'
+    } else if (text == 'release') {
+      env.VUE_MODE = 'build-rel'
+    } else if (text == 'master') {
+      env.VUE_MODE = 'build-prod'
+    } else {
+      env.VUE_MODE = ""
+    }
+}
 
 node {
   def mode = ''
@@ -20,6 +47,8 @@ node {
     } else {
       error "env parameter error!!!!"
     }
+    sh "echo >>> env test"
+    sh "echo ${initEnvData}"
     
     // directory check
     sh '''
