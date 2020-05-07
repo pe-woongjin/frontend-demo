@@ -47,8 +47,9 @@ node {
     } else {
       error "env parameter error!!!!"
     }
+    initEnvData("${branch}")
     sh "echo >>> env test"
-    sh "echo ${initEnvData}"
+    sh "echo ${VUE_MODE}"
     
     // directory check
     sh '''
