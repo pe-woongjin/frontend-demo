@@ -78,31 +78,29 @@ def initVariables(def tgList) {
 
 node {
     stage('Pre-Process') {
-        steps {
-            script {
-                echo "----- [Pre-Process] showVariables -----"
-                showVariables()
+        script {
+            echo "----- [Pre-Process] showVariables -----"
+            showVariables()
 
-                
-                echo "----- [Pre-Process] init Environment -----"
-                initEnvironment("${branch}")
-                
-                echo "----- [Pre-Process] Discovery Active Target Group -----"
-                sh"""
-                aws elbv2 describe-target-groups \
-                --query 'TargetGroups[?starts_with(TargetGroupName,`${TARGET_GROUP_PREFIX}`)==`true`]' \
-                --region ap-northeast-2 --output json > TARGET_GROUP_LIST.json
-                cat ./TARGET_GROUP_LIST.json
-                """
 
-                def textValue = readFile("TARGET_GROUP_LIST.json")
-                def tgList = toJson(textValue)
-                echo "----- [Pre-Process] Initialize Variables -----"
-                initVariables(tgList)
+            echo "----- [Pre-Process] init Environment -----"
+            initEnvironment("${branch}")
 
-                echo "----- [Pre-Process] showVariables -----"
-                showVariables()
-            }
+            echo "----- [Pre-Process] Discovery Active Target Group -----"
+            sh"""
+            aws elbv2 describe-target-groups \
+            --query 'TargetGroups[?starts_with(TargetGroupName,`${TARGET_GROUP_PREFIX}`)==`true`]' \
+            --region ap-northeast-2 --output json > TARGET_GROUP_LIST.json
+            cat ./TARGET_GROUP_LIST.json
+            """
+
+            def textValue = readFile("TARGET_GROUP_LIST.json")
+            def tgList = toJson(textValue)
+            echo "----- [Pre-Process] Initialize Variables -----"
+            initVariables(tgList)
+
+            echo "----- [Pre-Process] showVariables -----"
+            showVariables()
         }
     }
     stage('Git clone') {
