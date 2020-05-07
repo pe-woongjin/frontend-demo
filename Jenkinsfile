@@ -7,6 +7,16 @@ def TARGET_DOMAIN_NAME    = ""
 def TARGET_GROUP_PREFIX   = ""
 def TARGET_RULE_ARN       = ""
 
+def DEPLOY_GROUP_NAME   = ""
+def DEPLOYMENT_ID       = ""
+def ASG_DESIRED         = 1
+def ASG_MIN             = 1
+def CURR_ASG_NAME       = ""
+def NEXT_ASG_NAME       = ""
+def NEXT_TG_ARN         = ""
+def ALB_ARN             = ""
+def TG_RULE_ARN         = ""
+
 def NPM_MODE = ""
 
 @NonCPS
