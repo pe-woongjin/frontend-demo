@@ -169,7 +169,6 @@ node {
     
     stage ('deploy') {
         dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}/dist") {
-            sh "aws --version"
             sh '''
             aws deploy create-deployment \
             --application-name "demo-apne2-ui-codedeploy" \
