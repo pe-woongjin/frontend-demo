@@ -17,6 +17,7 @@ def VUE_MODE = ""
 
 
 def initEnvData(String text) {
+    sh "echo initEnvData"
     if (text == 'develop') {
       env.VUE_MODE = 'build-dev'
     } else if (text == 'release') {
@@ -47,8 +48,10 @@ node {
     } else {
       error "env parameter error!!!!"
     }
+      
+    sh "echo >>> env test0"
     initEnvData("${branch}")
-    sh "echo >>> env test"
+    sh "echo >>> env test1"
     sh "echo ${VUE_MODE}"
     
     // directory check
