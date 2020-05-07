@@ -17,7 +17,7 @@ def VUE_MODE = ""
 
 
 def initEnvData(String text) {
-    sh "echo initEnvData"
+    sh "echo initEnvData ${text}"
     if (text == 'develop') {
       env.VUE_MODE = 'build-dev'
     } else if (text == 'release') {
