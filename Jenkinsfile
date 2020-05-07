@@ -142,20 +142,18 @@ node {
     }
     
     stage('Preparing Auto-Scale Stage') {
-        steps {
-            script {
-                echo "----- [Auto-Scale] Preparing Next Auto-Scaling-Group: ${env.NEXT_ASG_NAME} -----"
+        script {
+            echo "----- [Auto-Scale] Preparing Next Auto-Scaling-Group: ${env.NEXT_ASG_NAME} -----"
 
-                sh"""
-                aws autoscaling update-auto-scaling-group --auto-scaling-group-name ${env.NEXT_ASG_NAME} \
-                --desired-capacity ${ASG_DESIRED} \
-                --min-size ${ASG_MIN} \
-                --region ap-northeast-2
-                """
+            sh"""
+            aws autoscaling update-auto-scaling-group --auto-scaling-group-name ${env.NEXT_ASG_NAME} \
+            --desired-capacity ${ASG_DESIRED} \
+            --min-size ${ASG_MIN} \
+            --region ap-northeast-2
+            """
 
-                echo "----- [Auto-Scale] Waiting boot-up ec2 instances: 90 secs. -----"
-                sh "sleep 90"
-            }
+            echo "----- [Auto-Scale] Waiting boot-up ec2 instances: 90 secs. -----"
+            sh "sleep 90"
         }
     }
     
