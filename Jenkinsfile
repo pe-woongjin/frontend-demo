@@ -189,7 +189,7 @@ node {
     }
     
     stage('Health-Check') {
-        steps {
+        script {
             echo "----- [Health-Check] DEPLOYMENT_ID ${env.DEPLOYMENT_ID} -----"
             echo "----- [Health-Check] Waiting codedeploy processing -----"
             timeout(time: 3, unit: 'MINUTES'){                                         
@@ -199,31 +199,27 @@ node {
     }
 
     stage('Change LB-Routing') {
-        steps {
-            script {
-                echo "----- [LB] Change load-balancer routing path -----"
-                sh"""
-                aws elbv2 modify-rule --rule-arn ${TARGET_RULE_ARN} \
-                --conditions Field=host-header,Values=${TARGET_DOMAIN_NAME} \
-                --actions Type=forward,TargetGroupArn=${env.NEXT_TG_ARN} \
-                --region ap-northeast-2 --output json > CHANGED_LB_TARGET_GROUP.json
-                cat ./CHANGED_LB_TARGET_GROUP.json
-                """
-            }
+        script {
+            echo "----- [LB] Change load-balancer routing path -----"
+            sh"""
+            aws elbv2 modify-rule --rule-arn ${TARGET_RULE_ARN} \
+            --conditions Field=host-header,Values=${TARGET_DOMAIN_NAME} \
+            --actions Type=forward,TargetGroupArn=${env.NEXT_TG_ARN} \
+            --region ap-northeast-2 --output json > CHANGED_LB_TARGET_GROUP.json
+            cat ./CHANGED_LB_TARGET_GROUP.json
+            """
         }
     }
 
     stage('Stopping Blue Stage') {
-        steps {
-            script{
-                echo "----- [Stopping Blue] Stopping Blue Stage. Auto-Acaling-Group: ${env.CURR_ASG_NAME} -----"
-                sh"sleep 30"
-                sh"""
-                aws autoscaling update-auto-scaling-group --auto-scaling-group-name ${env.CURR_ASG_NAME}  \
-                --desired-capacity 0 --min-size 0 \
-                --region ap-northeast-2
-                """
-            }
+        script{
+            echo "----- [Stopping Blue] Stopping Blue Stage. Auto-Acaling-Group: ${env.CURR_ASG_NAME} -----"
+            sh"sleep 30"
+            sh"""
+            aws autoscaling update-auto-scaling-group --auto-scaling-group-name ${env.CURR_ASG_NAME}  \
+            --desired-capacity 0 --min-size 0 \
+            --region ap-northeast-2
+            """
         }
     }
 }
