@@ -125,6 +125,7 @@ node {
     }
     
     stage ('npm build') {
+        sh "echo ----- [npm build] -----"
         // directory check
         sh '''
         mkdir -p /var/lib/jenkins/workspace/build
@@ -145,6 +146,7 @@ node {
     }
     
     stage ('S3 Upload') {
+        sh "echo ----- [S3 Upload] -----"
         dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}/dist") {
             sh "jar cvf ${S3_FILE_NAME} *"
             sh "ls"
