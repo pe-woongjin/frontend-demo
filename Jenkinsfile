@@ -42,7 +42,7 @@ node {
 
     initEnvData("${branch}")
     sh "echo env test1"
-    sh "echo ${VUE_MODE}"
+    sh "echo ${env.VUE_MODE}"
     
     // directory check
     sh '''
