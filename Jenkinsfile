@@ -33,6 +33,7 @@ def initEnvData(String text) {
 node {
   def mode = ''
   stage('Git clone') {
+      initEnvData("${branch}")
     sh '''
     rm -rf /var/lib/jenkins/workspace/"${JOB_NAME}"/*
     '''
