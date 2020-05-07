@@ -1,23 +1,26 @@
 import groovy.json.JsonSlurper
 
-def S3_BUCKET_NAME        = "opsflex-cicd-mgmt"
-def S3_PATH               = "frontend"
+def S3_BUCKET_NAME          = "opsflex-cicd-mgmt"
+def S3_PATH                 = "frontend"
+def S3_FILE_NAME            = "frontend.zip"
 
-def TARGET_DOMAIN_NAME    = ""
-def TARGET_GROUP_PREFIX   = ""
-def TARGET_RULE_ARN       = ""
+def TARGET_DOMAIN_NAME      = ""
+def TARGET_GROUP_PREFIX     = ""
+def TARGET_RULE_ARN         = ""
 
-def DEPLOY_GROUP_NAME   = ""
-def DEPLOYMENT_ID       = ""
-def ASG_DESIRED         = 1
-def ASG_MIN             = 1
-def CURR_ASG_NAME       = ""
-def NEXT_ASG_NAME       = ""
-def NEXT_TG_ARN         = ""
-def ALB_ARN             = ""
-def TG_RULE_ARN         = ""
+def DEPLOY_GROUP_NAME       = ""
+def DEPLOYMENT_ID           = ""
+def ASG_DESIRED             = 1
+def ASG_MIN                 = 1
+def CURR_ASG_NAME           = ""
+def NEXT_ASG_NAME           = ""
+def NEXT_TG_ARN             = ""
+def ALB_ARN                 = ""
+def TG_RULE_ARN             = ""
 
-def NPM_MODE = ""
+def NPM_MODE                = ""
+
+def CODE_DEPLOY_NAME        = "demo-apne2-ui-codedeploy"
 
 @NonCPS
 def toJson(String text) {
@@ -143,10 +146,10 @@ node {
     
     stage ('S3 Upload') {
         dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}/dist") {
-            sh "jar cvf frontend.zip *"
+            sh "jar cvf ${S3_FILE_NAME} *"
             sh "ls"
             withAWS(region:'ap-northeast-2') {
-                s3Upload(file:'frontend.zip', bucket:"${S3_BUCKET_NAME}", path:"${S3_PATH}/${JOB_NAME}/${BUILD_NUMBER}/frontend.zip")
+                s3Upload(file:"${S3_FILE_NAME}", bucket:"${S3_BUCKET_NAME}", path:"${S3_PATH}/${JOB_NAME}/${BUILD_NUMBER}/${S3_FILE_NAME}")
             }      
         }
     }
@@ -169,14 +172,58 @@ node {
     
     stage ('deploy') {
         dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}/dist") {
-            sh '''
+            sh """
             aws deploy create-deployment \
-            --application-name "demo-apne2-ui-codedeploy" \
-            --s3-location bucket="demo-apne2-cicd-mgmt",key=frontend/${JOB_NAME}/${BUILD_NUMBER}/frontend.zip,bundleType=zip \
-            --deployment-group-name "demo-ui-group-a" \
+            --application-name "${CODE_DEPLOY_NAME}" \
+            --s3-location bucket="${S3_BUCKET_NAME}",key=${S3_PATH}/${JOB_NAME}/${BUILD_NUMBER}/${S3_FILE_NAME},bundleType=zip \
+            --deployment-group-name "${env.DEPLOY_GROUP_NAME}" \
             --description "create frontend" \
-            --region ap-northeast-2
-            '''
+            --region ap-northeast-2 \
+            --output json > DEPLOYMENT_ID.json
+            """
+            
+            def textValue = readFile("DEPLOYMENT_ID.json")
+            def jsonDI =toJson(textValue)
+            env.DEPLOYMENT_ID = "${jsonDI.deploymentId}"
+        }
+    }
+    
+    stage('Health-Check') {
+        steps {
+            echo "----- [Health-Check] DEPLOYMENT_ID ${env.DEPLOYMENT_ID} -----"
+            echo "----- [Health-Check] Waiting codedeploy processing -----"
+            timeout(time: 3, unit: 'MINUTES'){                                         
+              awaitDeploymentCompletion("${env.DEPLOYMENT_ID}")
+            }
+        }
+    }
+
+    stage('Change LB-Routing') {
+        steps {
+            script {
+                echo "----- [LB] Change load-balancer routing path -----"
+                sh"""
+                aws elbv2 modify-rule --rule-arn ${TARGET_RULE_ARN} \
+                --conditions Field=host-header,Values=${APP_DOMAIN_NAME} \
+                --actions Type=forward,TargetGroupArn=${env.NEXT_TG_ARN} \
+                --region ap-northeast-2 --output json > CHANGED_LB_TARGET_GROUP.json
+                cat ./CHANGED_LB_TARGET_GROUP.json
+                """
+            }
+        }
+    }
+
+    stage('Stopping Blue Stage') {
+        steps {
+            script{
+                echo "----- [Stopping Blue] Stopping Blue Stage. Auto-Acaling-Group: ${env.CURR_ASG_NAME} -----"
+                sh"sleep 30"
+                sh"""
+                aws autoscaling update-auto-scaling-group --auto-scaling-group-name ${env.CURR_ASG_NAME}  \
+                --desired-capacity 0 --min-size 0 \
+                --region ap-northeast-2
+                """
+            }
         }
     }
 }
