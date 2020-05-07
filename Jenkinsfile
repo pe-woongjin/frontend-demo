@@ -26,6 +26,7 @@ def initEnvData(String text) {
       env.VUE_MODE = 'build-prod'
     } else {
       env.VUE_MODE = ""
+      error "env parameter error!!!!"
     }
 }
 
