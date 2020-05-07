@@ -1,3 +1,6 @@
+def S3_BUCKET_NAME      = "opsflex-cicd-mgmt"
+def S3_PATH             = "frontend"
+
 node {
   def mode = ''
   stage('Git clone') {
@@ -41,7 +44,7 @@ node {
       sh "jar cvf frontend.zip *"
       sh "ls"
       withAWS(region:'ap-northeast-2') {
-        s3Upload(file:'frontend.zip', bucket:'demo-apne2-cicd-mgmt', path:"frontend/${JOB_NAME}/${BUILD_NUMBER}/frontend.zip")
+        s3Upload(file:'frontend.zip', bucket:"${S3_BUCKET_NAME}", path:"${S3_PATH}/${JOB_NAME}/${BUILD_NUMBER}/frontend.zip")
       }      
     }
   }
