@@ -38,6 +38,7 @@ node {
     git(url: 'https://github.com/pe-woongjin/frontend-demo.git', branch: "${branch}", changelog: true)
   }
   stage ('npm build') {
+    sh "111111111"
     // env parameter setting
     if ("${branch}" == 'develop') {
       mode = 'build-dev'
@@ -49,9 +50,9 @@ node {
       error "env parameter error!!!!"
     }
       
-    sh "echo >>> env test0"
+    sh "echo env test0"
     initEnvData("${branch}")
-    sh "echo >>> env test1"
+    sh "echo env test1"
     sh "echo ${VUE_MODE}"
     
     // directory check
