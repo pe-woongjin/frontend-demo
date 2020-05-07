@@ -103,12 +103,14 @@ node {
             showVariables()
         }
     }
+    
     stage('Git clone') {
         sh '''
         rm -rf /var/lib/jenkins/workspace/"${JOB_NAME}"/*
         '''
         git(url: 'https://github.com/pe-woongjin/frontend-demo.git', branch: "${branch}", changelog: true)
     }
+    
     stage ('npm build') {
         // directory check
         sh '''
@@ -128,29 +130,50 @@ node {
         sh "cp -rf /var/lib/jenkins/workspace/build/${JOB_NAME}/appspec.yml /var/lib/jenkins/workspace/build/${JOB_NAME}/dist" 
 
     }
-  stage ('S3 Upload') {
-    dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}/dist") {
-      sh "jar cvf frontend.zip *"
-      sh "ls"
-      withAWS(region:'ap-northeast-2') {
-        s3Upload(file:'frontend.zip', bucket:"${S3_BUCKET_NAME}", path:"${S3_PATH}/${JOB_NAME}/${BUILD_NUMBER}/frontend.zip")
-      }      
+    
+    stage ('S3 Upload') {
+        dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}/dist") {
+            sh "jar cvf frontend.zip *"
+            sh "ls"
+            withAWS(region:'ap-northeast-2') {
+                s3Upload(file:'frontend.zip', bucket:"${S3_BUCKET_NAME}", path:"${S3_PATH}/${JOB_NAME}/${BUILD_NUMBER}/frontend.zip")
+            }      
+        }
     }
-  }
-  stage ('deploy') {
-    dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}/dist") {
-      sh "aws --version"
-      sh '''
-      aws deploy create-deployment \
-      --application-name "demo-apne2-ui-codedeploy" \
-      --s3-location bucket="demo-apne2-cicd-mgmt",key=frontend/${JOB_NAME}/${BUILD_NUMBER}/frontend.zip,bundleType=zip \
-      --deployment-group-name "demo-ui-group-a" \
-      --description "create frontend" \
-      --region ap-northeast-2
-      '''
+    
+    stage('Preparing Auto-Scale Stage') {
+        steps {
+            script {
+                echo "----- [Auto-Scale] Preparing Next Auto-Scaling-Group: ${env.NEXT_ASG_NAME} -----"
+
+                sh"""
+                aws autoscaling update-auto-scaling-group --auto-scaling-group-name ${env.NEXT_ASG_NAME} \
+                --desired-capacity ${ASG_DESIRED} \
+                --min-size ${ASG_MIN} \
+                --region ap-northeast-2
+                """
+
+                echo "----- [Auto-Scale] Waiting boot-up ec2 instances: 90 secs. -----"
+                sh "sleep 90"
+            }
+        }
     }
-  }
+    
+    stage ('deploy') {
+        dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}/dist") {
+            sh "aws --version"
+            sh '''
+            aws deploy create-deployment \
+            --application-name "demo-apne2-ui-codedeploy" \
+            --s3-location bucket="demo-apne2-cicd-mgmt",key=frontend/${JOB_NAME}/${BUILD_NUMBER}/frontend.zip,bundleType=zip \
+            --deployment-group-name "demo-ui-group-a" \
+            --description "create frontend" \
+            --region ap-northeast-2
+            '''
+        }
+    }
 }
+
 parameters {
   string(name: 'branch', defaultValue: 'develop', description: '디플로이할 대상 브랜치를 입력하세요.')
 }
