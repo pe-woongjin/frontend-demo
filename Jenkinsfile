@@ -39,19 +39,8 @@ node {
   }
   stage ('npm build') {
     sh "echo 111111111"
-    // env parameter setting
-    if ("${branch}" == 'develop') {
-      mode = 'build-dev'
-    } else if ("${branch}" == 'release') {
-      mode = 'build-rel'
-    } else if ("${branch}" == 'master') {
-      mode = 'build-prod'
-    } else {
-      error "env parameter error!!!!"
-    }
-      
-    sh "echo env test0"
-    initEnvData(mode)
+
+    initEnvData("${branch}")
     sh "echo env test1"
     sh "echo ${VUE_MODE}"
     
