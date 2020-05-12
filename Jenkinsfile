@@ -129,7 +129,7 @@ node {
         git(url: 'https://github.com/pe-woongjin/frontend-demo.git', branch: "${branch}", changelog: true)
     }
     
-    stage ('npm build') {
+    stage ('Npm build') {
         sh "echo ----- [npm build] -----"
         // directory check
         sh '''
@@ -150,7 +150,7 @@ node {
 
     }
     
-    stage ('S3 Upload') {
+    stage ('S3 upload') {
         sh "echo ----- [S3 Upload] -----"
         dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}/dist") {
             sh "jar cvf ${S3_FILE_NAME} *"
@@ -177,7 +177,7 @@ node {
         }
     }
     
-    stage ('deploy') {
+    stage ('Deploy') {
         sh "echo ----- [Codedeploy] -----"
         dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}/dist") {
             sh """
