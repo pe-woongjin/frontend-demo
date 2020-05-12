@@ -119,7 +119,114 @@ node {
         }
     }
     
+    stage('Git clone') {
+        sh '''
+        rm -rf /var/lib/jenkins/workspace/"${JOB_NAME}"/*
+        '''
+        git(url: 'https://github.com/pe-woongjin/frontend-demo.git', branch: "${branch}", changelog: true)
+    }
     
+    stage ('npm build') {
+        sh "echo ----- [npm build] -----"
+        // directory check
+        sh '''
+        mkdir -p /var/lib/jenkins/workspace/build
+        rm -rf /var/lib/jenkins/workspace/build/"${JOB_NAME}"/*
+        cp -rf /var/lib/jenkins/workspace/"${JOB_NAME}" /var/lib/jenkins/workspace/build
+        cd /var/lib/jenkins/workspace/build/"${JOB_NAME}"
+        npm install
+        echo npm install success
+        '''
+        // npm build
+        dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}") {
+          sh "npm run ${env.NPM_MODE}"
+        }
+        // codedeploy setting
+        sh "cp -rf /var/lib/jenkins/workspace/build/${JOB_NAME}/scripts /var/lib/jenkins/workspace/build/${JOB_NAME}/dist"
+        sh "cp -rf /var/lib/jenkins/workspace/build/${JOB_NAME}/appspec.yml /var/lib/jenkins/workspace/build/${JOB_NAME}/dist" 
+
+    }
+    
+    stage ('S3 Upload') {
+        sh "echo ----- [S3 Upload] -----"
+        dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}/dist") {
+            sh "jar cvf ${S3_FILE_NAME} *"
+            sh "ls"
+            withAWS(region:'ap-northeast-2') {
+                s3Upload(file:"${S3_FILE_NAME}", bucket:"${S3_BUCKET_NAME}", path:"${S3_PATH}/${JOB_NAME}/${BUILD_NUMBER}/${S3_FILE_NAME}")
+            }      
+        }
+    }
+    
+    stage('Preparing Auto-Scale Stage') {
+        script {
+            echo "----- [Auto-Scale] Preparing Next Auto-Scaling-Group: ${env.NEXT_ASG_NAME} -----"
+
+            sh"""
+            aws autoscaling update-auto-scaling-group --auto-scaling-group-name ${env.NEXT_ASG_NAME} \
+            --desired-capacity ${ASG_DESIRED} \
+            --min-size ${ASG_MIN} \
+            --region ap-northeast-2
+            """
+
+            echo "----- [Auto-Scale] Waiting boot-up ec2 instances: 90 secs. -----"
+            sh "sleep 90"
+        }
+    }
+    
+    stage ('deploy') {
+        sh "echo ----- [Codedeploy] -----"
+        dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}/dist") {
+            sh """
+            aws deploy create-deployment \
+            --application-name "${CODE_DEPLOY_NAME}" \
+            --s3-location bucket="${S3_BUCKET_NAME}",key=${S3_PATH}/${JOB_NAME}/${BUILD_NUMBER}/${S3_FILE_NAME},bundleType=zip \
+            --deployment-group-name "${env.DEPLOY_GROUP_NAME}" \
+            --description "create frontend" \
+            --region ap-northeast-2 \
+            --output json > DEPLOYMENT_ID.json
+            """
+            
+            def textValue = readFile("DEPLOYMENT_ID.json")
+            def jsonDI =toJson(textValue)
+            env.DEPLOYMENT_ID = "${jsonDI.deploymentId}"
+        }
+    }
+    
+    stage('Health-Check') {
+        script {
+            echo "----- [Health-Check] DEPLOYMENT_ID ${env.DEPLOYMENT_ID} -----"
+            echo "----- [Health-Check] Waiting codedeploy processing -----"
+            timeout(time: 3, unit: 'MINUTES'){                                         
+              awaitDeploymentCompletion("${env.DEPLOYMENT_ID}")
+            }
+        }
+    }
+
+    stage('Change LB-Routing') {
+        script {
+            echo "----- [LB] Change load-balancer routing path -----"
+            sh"""
+            aws elbv2 modify-rule --rule-arn ${env.TARGET_RULE_ARN} \
+            --conditions Field=host-header,Values=${env.TARGET_DOMAIN_NAME} \
+            --actions Type=forward,TargetGroupArn=${env.NEXT_TG_ARN} \
+            --region ap-northeast-2 --output json > CHANGED_LB_TARGET_GROUP.json
+            cat ./CHANGED_LB_TARGET_GROUP.json
+            """
+        }
+    }
+
+    stage('Stopping Blue Stage') {
+        script{
+            echo "----- [Stopping Blue] Stopping Blue Stage. Auto-Acaling-Group: ${env.CURR_ASG_NAME} -----"
+            sh"sleep 30"
+            sh"""
+            aws autoscaling update-auto-scaling-group --auto-scaling-group-name ${env.CURR_ASG_NAME}  \
+            --desired-capacity 0 --min-size 0 \
+            --region ap-northeast-2
+            """
+        }
+    }
 }
 
 parameters {
