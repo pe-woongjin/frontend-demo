@@ -73,7 +73,7 @@ def initVariables(def tgList) {
         echo "test : ${tg}"
         if(lbARN != null && lbARN.startsWith("arn:aws")) {
             env.ALB_ARN = lbARN
-            if(tgName.startsWith("demo-apne2-dev-ui-a")) {
+            if(tgName.startsWith("${env.TARGET_GROUP_PREFIX}" + "-a")) {
                 echo ">>> Init change from group a to group b"
                 env.DEPLOY_GROUP_NAME = "demo-ui-group-b"
                 env.CURR_ASG_NAME     = env.TARGET_GROUP_PREFIX + "-a-asg"
