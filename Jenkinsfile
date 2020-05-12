@@ -94,12 +94,12 @@ def initVariables(def tgList) {
 node {
     stage('Pre-Process') {
         script {
-            echo "----- [Pre-Process] showVariables -----"
-            showVariables()
-
 
             echo "----- [Pre-Process] init Environment -----"
             initEnvironment("${branch}")
+            
+            echo "----- [Pre-Process] showVariables -----"
+            showVariables()
 
             echo "----- [Pre-Process] Discovery Active Target Group -----"
             sh"""
