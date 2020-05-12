@@ -20,7 +20,7 @@ def TG_RULE_ARN             = ""
 
 def NPM_MODE                = ""
 
-def CODE_DEPLOY_NAME        = "demo-apne2-ui-codedeploy"
+def CODE_DEPLOY_NAME        = ""
 
 @NonCPS
 def toJson(String text) {
@@ -34,16 +34,19 @@ def initEnvironment(String text) {
         env.TARGET_DOMAIN_NAME    = "dev.ui.mingming.shop"
         env.TARGET_GROUP_PREFIX   = "demo-apne2-dev-ui"
         env.TARGET_RULE_ARN       = "arn:aws:elasticloadbalancing:ap-northeast-2:144149479695:listener-rule/app/comp-apne2-prod-mgmt-alb/d76ec25af38db29c/d15a5636f3b71341/9c0fec3c2647a91a"
+        env.CODE_DEPLOY_NAME      = "demo-apne2-ui-codedeploy"
     } else if (text == 'release') {
         env.NPM_MODE = 'build-rel'
         env.TARGET_DOMAIN_NAME    = "stg.ui.mingming.shop"
         env.TARGET_GROUP_PREFIX   = "demo-apne2-stg-ui"
         env.TARGET_RULE_ARN       = "arn:aws:elasticloadbalancing:ap-northeast-2:144149479695:listener-rule/app/comp-apne2-prod-mgmt-alb/d76ec25af38db29c/d15a5636f3b71341/9c0fec3c2647a91a"
+        env.CODE_DEPLOY_NAME      = "demo-apne2-ui-codedeploy"
     } else if (text == 'master') {
         env.NPM_MODE = 'build-prod'
         env.TARGET_DOMAIN_NAME    = "ui.mingming.shop"
         env.TARGET_GROUP_PREFIX   = "demo-apne2-prod-ui"
         env.TARGET_RULE_ARN       = "arn:aws:elasticloadbalancing:ap-northeast-2:144149479695:listener-rule/app/comp-apne2-prod-mgmt-alb/d76ec25af38db29c/d15a5636f3b71341/9c0fec3c2647a91a"
+        env.CODE_DEPLOY_NAME      = "demo-apne2-ui-codedeploy"
     } else {
         env.NPM_MODE = ""
         error "env parameter error!!!!"
@@ -179,7 +182,7 @@ node {
         dir ("/var/lib/jenkins/workspace/build/${JOB_NAME}/dist") {
             sh """
             aws deploy create-deployment \
-            --application-name "${CODE_DEPLOY_NAME}" \
+            --application-name "${env.CODE_DEPLOY_NAME}" \
             --s3-location bucket="${S3_BUCKET_NAME}",key=${S3_PATH}/${JOB_NAME}/${BUILD_NUMBER}/${S3_FILE_NAME},bundleType=zip \
             --deployment-group-name "${env.DEPLOY_GROUP_NAME}" \
             --description "create frontend" \
