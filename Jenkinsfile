@@ -104,7 +104,7 @@ node {
             echo "----- [Pre-Process] Discovery Active Target Group -----"
             sh"""
             aws elbv2 describe-target-groups \
-            --query 'TargetGroups[?starts_with(TargetGroupName,`${TARGET_GROUP_PREFIX}`)==`true`]' \
+            --query 'TargetGroups[?starts_with(TargetGroupName,`${env.TARGET_GROUP_PREFIX}`)==`true`]' \
             --region ap-northeast-2 --output json > TARGET_GROUP_LIST.json
             cat ./TARGET_GROUP_LIST.json
             """
