@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>CICD 상세 흐름 - Demo frontend Service Application</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../../css/theme.css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "CICD \uc0c1\uc138 \ud750\ub984";
+    var mkdocs_page_input_path = "cicd/cicd-05.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Demo frontend Service Application</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../..">소개</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">아키텍쳐</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../arch/arch-01/">인프라 아키텍처</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../arch/arch-02/">CICD 아키텍처</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../app/app-01/">애플리케이션 아키텍처</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">인프라 구성</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../iac/infra-01/">IAM 구성</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../iac/infra-02/">VPC 리소스 구성</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../iac/infra-03/">CodeDeploy 구성</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../iac/base-01/">베이스 이미지 구성</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">CICD 구성</span></p>
+                <ul class="current">
+                    <li class="toctree-l1"><a class="reference internal" href="../cicd-01/">GitOps 구성 소개</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../cicd-02/">Gitlab Jenkins 인증 구성</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../cicd-03/">Jenkins CICD 구성</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../cicd-04/">Jenkins webhook 구성</a>
+                    </li>
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">CICD 상세 흐름</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#demo-frontend-cicd">demo-frontend CICD 파이프라인 상세</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Demo frontend Service Application</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>CICD 구성 &raquo;</li>
+        
+      
+    
+    <li>CICD 상세 흐름</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="cicd">CICD 상세 흐름</h1>
+<h2 id="demo-frontend-cicd">demo-frontend CICD 파이프라인 상세</h2>
+<p><img alt="jinkins-cicd-flow" src="../../img/demo-cicd-pipeline.png" /></p>
+<pre><code class="js">pipeline {
+    agent any
+    stages {
+        stage('Pre-Process') {
+            사전 준비 단계로 배포에 필요한 변수값 셋팅한다. (blue, green 사용 변수)
+        }
+
+        stage('Preparing Auto-Scale Stage') {
+            현재 사용중인 auto-scaling instance 갯수를 판단하여 변수값 셋팅한다.(배포시 활용)
+        }
+
+        stage('Git clone') {
+            GitLab에서 frontend 프로젝트 clone 받는다.
+        }
+
+        stage ('Npm build') {
+            git에서 받은 frontend 프로젝트 배포 파일을 생성한다.
+        }
+
+        stage ('S3 upload') {
+            frontend 프로젝트 배포 파일을 zip 파일로 변경하여, S3에 저장한다.
+        }
+
+        stage('Preparing Auto-Scale Stage') {
+            blue 가 사용인 경우 green Auto-scaling group을 최소 단위로 활성화 시킨다.
+        }
+
+        stage('Deploy') {
+            AWS CodeDeploy를 실행하여, green에 frontend 를 배포한다.
+        }
+
+        stage('Health-Check') {
+            AWS CodeDeploy 배포 완료를 기다린다.
+        }
+
+        stage('Change LB-Routing') {
+            ALB에 맵핑되어 있는 blue와 green 의 target group을 변경하여 새로 배포돠어 있는 green을 사용가능하게 한다.
+        }
+
+        stage('Stopping Blue Stage') {
+            기존에 사용중인 blue 영역을 정지시킨다.
+        }
+    }
+}
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../cicd-04/" class="btn btn-neutral" title="Jenkins webhook 구성"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../cicd-04/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

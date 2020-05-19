@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Jenkins webhook 구성 - Demo frontend Service Application</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../../css/theme.css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Jenkins webhook \uad6c\uc131";
+    var mkdocs_page_input_path = "cicd/cicd-04.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Demo frontend Service Application</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../..">소개</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">아키텍쳐</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../arch/arch-01/">인프라 아키텍처</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../arch/arch-02/">CICD 아키텍처</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../app/app-01/">애플리케이션 아키텍처</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">인프라 구성</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../iac/infra-01/">IAM 구성</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../iac/infra-02/">VPC 리소스 구성</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../iac/infra-03/">CodeDeploy 구성</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../iac/base-01/">베이스 이미지 구성</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">CICD 구성</span></p>
+                <ul class="current">
+                    <li class="toctree-l1"><a class="reference internal" href="../cicd-01/">GitOps 구성 소개</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../cicd-02/">Gitlab Jenkins 인증 구성</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../cicd-03/">Jenkins CICD 구성</a>
+                    </li>
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Jenkins webhook 구성</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-jenkins">1. Jenkins 자동 배포 브랜치 설정</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-jenkins-webhook-uri">2. Jenkins Webhook URI 확인</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-gitlab-webhooks">3. Gitlab Webhooks 등록</a>
+    </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../cicd-05/">CICD 상세 흐름</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Demo frontend Service Application</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>CICD 구성 &raquo;</li>
+        
+      
+    
+    <li>Jenkins webhook 구성</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="jenkins-webhook">Jenkins Webhook 구성</h1>
+<h2 id="1-jenkins">1. Jenkins 자동 배포 브랜치 설정</h2>
+<p>Jenkins의 demo-frontend 파이프라인의 Configuration 을 통해 GitOps 자동 배포를 구성 합니다. </p>
+<ul>
+<li>demo-frontend Jenkins 프로젝트에서 Configure를 선택 합니다. 
+<img alt="jenkins-project" src="../../img/jenkins-cicd-10.png" /></li>
+</ul>
+<p><br/></p>
+<ul>
+<li>"Branch Sources" 섹션에서 Behaviours 중 "Filter by name (with wildcards)를 선택 합니다.
+<img alt="jenkins-project" src="../../img/jenkins-cicd-11.png" /></li>
+</ul>
+<p><br/></p>
+<ul>
+<li>Include 에 자동 배포가 되는 기준 브랜치 (develop release master) 브랜치를 기입 하고, 
+Exclude 에 자동 배포가 제외될 브랜치 (feature)를 기입 합니다.<br />
+<img alt="jenkins-project" src="../../img/jenkins-cicd-12.png" /></li>
+</ul>
+<p><br/></p>
+<ul>
+<li>자동 배포 브랜치 참조 속성 전략(Property strategy) 를 "Named branches get different properties"로 선택 하고 브랜치별 환경 변수를 다르게 지정 가능하도록 합니다.<br />
+<img alt="jenkins-project" src="../../img/jenkins-cicd-13.png" /></li>
+</ul>
+<p><br/></p>
+<ul>
+<li>"Build Configuration"에서 CICD 파이프 라인 설정을 Jenkinsfile 로 지정 합니다.<br />
+<img alt="jenkins-project" src="../../img/jenkins-cicd-14.png" /></li>
+</ul>
+<hr />
+<h2 id="2-jenkins-webhook-uri">2. Jenkins Webhook URI 확인</h2>
+<ul>
+<li>Jenkins 의 demo-frontend 파이프라인의 develop 브랜치를 선택 합니다. <br />
+<img alt="jenkins-project" src="../../img/jenkins-cicd-20.png" /></li>
+</ul>
+<p><br/></p>
+<ul>
+<li>View Configuration을 선택 합니다. <br />
+<img alt="jenkins-project" src="../../img/jenkins-cicd-21.png" /></li>
+</ul>
+<p><br/></p>
+<ul>
+<li>"Build Triggers" 섹션의 "Build when a change is pushed to GitLab. GitLab webhook URL" 항목에 있는 주소를 클립 보드에 복사하였다가 Gitlab 프로젝트의 Webhooks 로 등록 한다.
+<img alt="jenkins-project" src="../../img/jenkins-cicd-22.png" /></li>
+</ul>
+<p><br/></p>
+<hr />
+<h2 id="3-gitlab-webhooks">3. Gitlab Webhooks 등록</h2>
+<p>앞서 Jenkins의 Webhook 주소를 gitlab 프로젝트(demo-frontend)의 Webhooks에 등록 합니다.</p>
+<ul>
+<li>Gitlab의 demo-frontend 프로젝트를 선택 하고 "Settings &gt; Webhooks" 메뉴를 선택 합니다.<br />
+다음으로, Jenkins WebHook 주소를 URL에 기입하고 Push events 를 선택 한 뒤 하단의 "Add webhook" 을 통해 등록 합니다.
+<img alt="gitlab-project" src="../img/gitlab-cicd-30.png" /></li>
+</ul>
+<p><br/></p>
+<ul>
+<li>등록된 Webhook은 "Test" 버튼을 통해 hook 기능이 정상 동작 하는지 확인 할 수 있습니다. 
+<img alt="gitlab-project" src="../img/gitlab-cicd-31.png" /></li>
+</ul>
+<p><br/></p>
+<ul>
+<li>webhook 이 정상 동작 한다면 화면 상단에 HTTP 200 과 같은 정상 메시지를 확인 할 수 있습니다.
+<img alt="gitlab-project" src="../img/gitlab-cicd-32.png" /></li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../cicd-05/" class="btn btn-neutral float-right" title="CICD 상세 흐름">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../cicd-03/" class="btn btn-neutral" title="Jenkins CICD 구성"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../cicd-03/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../cicd-05/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

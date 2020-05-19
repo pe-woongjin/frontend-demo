@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>CodeDeploy 구성 - Demo frontend Service Application</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../../css/theme.css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "CodeDeploy \uad6c\uc131";
+    var mkdocs_page_input_path = "iac/infra-03.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Demo frontend Service Application</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../..">소개</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">아키텍쳐</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../arch/arch-01/">인프라 아키텍처</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../arch/arch-02/">CICD 아키텍처</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../app/app-01/">애플리케이션 아키텍처</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">인프라 구성</span></p>
+                <ul class="current">
+                    <li class="toctree-l1"><a class="reference internal" href="../infra-01/">IAM 구성</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../infra-02/">VPC 리소스 구성</a>
+                    </li>
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">CodeDeploy 구성</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1">1. 구성 요소</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2">2. 애플리케이션 구성</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3">3. 배포 그룹 구성</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../base-01/">베이스 이미지 구성</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">CICD 구성</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../cicd/cicd-01/">GitOps 구성 소개</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../cicd/cicd-02/">Gitlab Jenkins 인증 구성</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../cicd/cicd-03/">Jenkins CICD 구성</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../cicd/cicd-04/">Jenkins webhook 구성</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../cicd/cicd-05/">CICD 상세 흐름</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Demo frontend Service Application</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>인프라 구성 &raquo;</li>
+        
+      
+    
+    <li>CodeDeploy 구성</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="codedeploy">CodeDeploy 구성</h1>
+<p>Demo 애플리케이션(demo-frontend) 배포를 위해 CodeDeploy 애플리케이션을 생성 합니다.</p>
+<h2 id="1">1. 구성 요소</h2>
+<p>CodeDeploy를 통한 Blue/Green 배포를 위해 다음의 과정이 필요 합니다.</p>
+<blockquote>
+<ol>
+<li>CodeDeploy 애플리케이션 생성  </li>
+<li>CodeDeploy의 배포그룹 생성 </li>
+</ol>
+</blockquote>
+<p>CodeDeploy의 타겟 스테이지는 배포를 관장하는 오토스케일그룹이며 실제 로는 다음의 리소스가 연결 됩니다.</p>
+<h3>CodeDeploy 자원 구성 예시</h3>
+
+<table>
+<thead>
+<tr>
+<th align="center">구분</th>
+<th align="center">애플리케이션</th>
+<th align="center">배포 그룹</th>
+<th align="center">오토스케일 그룹</th>
+<th align="center">타겟 그룹</th>
+<th align="center">시작 템플릿</th>
+<th align="center">AMI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">블루</td>
+<td align="center">demo-frontend</td>
+<td align="center">group-a</td>
+<td align="center">demo-frontend-asg-01</td>
+<td align="center">demo-frontend-tg-01</td>
+<td align="center">demo-frontend-lt</td>
+<td align="center">demo-frontend-ami</td>
+</tr>
+<tr>
+<td align="center">그린</td>
+<td align="center">demo-frontend</td>
+<td align="center">group-b</td>
+<td align="center">demo-frontend-asg-02</td>
+<td align="center">demo-frontend-tg-02</td>
+<td align="center">demo-frontend-lt</td>
+<td align="center">demo-frontend-ami</td>
+</tr>
+</tbody>
+</table>
+<p>dev, stg, prd 와 같이 환경이 구분 된다면 더 많은 구성 요소를 필요로 합니다.</p>
+<table>
+<thead>
+<tr>
+<th align="center">구분</th>
+<th align="center">애플리케이션</th>
+<th align="center">배포 그룹</th>
+<th align="center">오토스케일 그룹</th>
+<th align="center">타겟 그룹</th>
+<th align="center">시작 템플릿</th>
+<th align="center">AMI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">dev 블루</td>
+<td align="center">demo-frontend-dev</td>
+<td align="center">group-a</td>
+<td align="center">demo-frontend-dev-asg-01</td>
+<td align="center">demo-frontend-dev-tg-01</td>
+<td align="center">demo-frontend-lt</td>
+<td align="center">demo-frontend-ami</td>
+</tr>
+<tr>
+<td align="center">dev 그린</td>
+<td align="center">demo-frontend-dev</td>
+<td align="center">group-b</td>
+<td align="center">demo-frontend-dev-asg-02</td>
+<td align="center">demo-frontend-dev-tg-02</td>
+<td align="center">demo-frontend-lt</td>
+<td align="center">demo-frontend-ami</td>
+</tr>
+<tr>
+<td align="center">stg 블루</td>
+<td align="center">demo-frontend-stg</td>
+<td align="center">group-a</td>
+<td align="center">demo-frontend-stg-asg-01</td>
+<td align="center">demo-frontend-stg-tg-01</td>
+<td align="center">demo-frontend-lt</td>
+<td align="center">demo-frontend-ami</td>
+</tr>
+<tr>
+<td align="center">stg 그린</td>
+<td align="center">demo-frontend-stg</td>
+<td align="center">group-b</td>
+<td align="center">demo-frontend-stg-asg-02</td>
+<td align="center">demo-frontend-stg-tg-02</td>
+<td align="center">demo-frontend-lt</td>
+<td align="center">demo-frontend-ami</td>
+</tr>
+<tr>
+<td align="center">prd 블루</td>
+<td align="center">demo-frontend-prd</td>
+<td align="center">group-a</td>
+<td align="center">demo-frontend-prd-asg-01</td>
+<td align="center">demo-frontend-prd-tg-01</td>
+<td align="center">demo-frontend-lt</td>
+<td align="center">demo-frontend-ami</td>
+</tr>
+<tr>
+<td align="center">prd 그린</td>
+<td align="center">demo-frontend-prd</td>
+<td align="center">group-b</td>
+<td align="center">demo-frontend-prd-asg-02</td>
+<td align="center">demo-frontend-prd-tg-02</td>
+<td align="center">demo-frontend-lt</td>
+<td align="center">demo-frontend-ami</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2">2. 애플리케이션 구성</h2>
+<ul>
+<li>CodeDeploy &gt; 배포 &gt; 애플리케이션 메뉴의 "애플리케이션 생성" 을 통해 구성을 시작 합니다. 
+<img alt="code-deploy" src="../../img/infra-01-10.png" /></li>
+</ul>
+<p><br/></p>
+<ul>
+<li>애플리케이션 이름과 컴퓨팅 플랫폼을 선택하고 "애플리케이션 생성" 버튼을 클릭 합니다.<br />
+<img alt="code-deploy" src="../../img/infra-01-11.png" /></li>
+</ul>
+<p><br/></p>
+<hr />
+<h2 id="3">3. 배포 그룹 구성</h2>
+<p>3 애플리케이션이 생성 되면 실제로 배포 진행을 관장 하는 배포 그룹을 생성 합니다.</p>
+<p><strong><code>중요</code></strong> Blue/Green 배포를 위해선 Blue에 대한 배포 그룹과 Green에 대한 배포 그룹 각각이 구성 되어야 합니다.</p>
+<p><img alt="code-deploy" src="../../img/infra-01-12.png" /></p>
+<p><br/></p>
+<ul>
+<li>배포 그룹 생성:     <blockquote>
+<p>"배포 그룹 이름"을 기입 하고 "서비스 역할"을 선택 합니다. <br />
+"배포 유형"에 "현재 위치"을 선택 합니다.   <br />
+(참고로, 배포 유형은 "현재 위치"와 "블루 그린" 두 가지 유형이 있으며, Blue/Green 임에도 "현재 위치"를 선택 해야 합니다.)    <br />
+"환경 구성"에 "오토 스케일 그룹"을 선택 합니다.   <br />
+"배포 설정"을 "CodeDeployDefault.AllAtOne"를 선택 하고 로드 밸런서를 선택 한뒤 demo-frontend가 배치될 대상 그룹 (예: demo-frontend-tg-01)을 선택 합니다.
+<img alt="code-deploy" src="../../img/infra-01-13.png" /></p>
+</blockquote>
+</li>
+</ul>
+<p><br/></p>
+<ul>
+<li>배포 그룹 확인
+auto-scaling group(demo-frontend-dev-asg-01, demo-frontend-dev-asg-02)에 대한 그룹을 두개 생성한다.
+<img alt="code-deploy" src="../../img/infra-01-14.png" /></li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../base-01/" class="btn btn-neutral float-right" title="베이스 이미지 구성">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../infra-02/" class="btn btn-neutral" title="VPC 리소스 구성"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../infra-02/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../base-01/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
