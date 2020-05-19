@@ -1,9 +1,0 @@
-site_name: vuejs guide
-pages:
-  - Main: index.md
-  - Build: 'build/build.md'
-  - Source:
-      - 'directory': 'source/directory.md'
-  - Deployment:
-      - 'jenkins': 'deployment/jenkins.md'
-      - 'codedeploy': 'deployment/codedeploy.md'
